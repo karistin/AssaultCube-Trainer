@@ -8,38 +8,43 @@ int main()
 {
     // get proID of target process
     DWORD procId = GetProcId(L"ac_client.exe");
+    //std::cout << "procId = " << std::dec << procId << std::endl;
 
     //get module base address
     uintptr_t moduleBase = GetModuleBaseAddress(procId, L"ac_client.exe");
-    
+    //std::cout << "moduleBase = " << "0x" << std::hex << moduleBase << std::endl;
+
     //get handle to process 
     HANDLE hProcess = 0;
     hProcess = OpenProcess(PROCESS_ALL_ACCESS, NULL, procId);
     //https://learn.microsoft.com/ko-kr/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess
     
-    
-    //Resolve base address of the pointer chain 
+   
+   //Resolve base address of the pointer chain 
     uintptr_t dynamicPtrBaseAddr = moduleBase + 0x18AC00;
 
     std::cout << "DynamicPtrBaseAddr = " << "0x" << std::hex << dynamicPtrBaseAddr << std::endl;
     
     //Resolve our ammo pointer chain 
-    //라이플 권총 수류탄 
-    std::vector<unsigned int> ammoOffsets = {0x0140, 0x012C, 0x0144};
-    uintptr_t ammoAddr = FindDMAAddy(hProcess, dynamicPtrBaseAddr, {0xF0});
-    
-    
+    //std::vector<unsigned int> ammoOffsets = {0x0140, 0x012C, 0x0144};
+    uintptr_t ammoAddr = FindMAAddy(hProcess, dynamicPtrBaseAddr, {0x0140});
     std::cout << "ammoAddr = " << "0x" << std::hex << ammoAddr << std::endl;
 
     //Read Ammo value
     int ammoValue = 0;
     ReadProcessMemory(hProcess, (BYTE*)ammoAddr, &ammoValue, sizeof(ammoValue), nullptr);
-    std::cout << "Current ammo = " << std::dec << ammoAddr << std::endl;
+    std::cout << "Current ammo = " << std::dec << ammoValue << std::endl;
 
     //Write to it
-    //int newAmmo = 1337;
-    //WriteProcessMemory(hProcess, (BYTE*)ammoAddr, &newAmmo, sizeof(newAmmo), nullptr);
+    int newAmmo = 1337;
+    WriteProcessMemory(hProcess, (BYTE*)ammoAddr, &newAmmo, sizeof(newAmmo), nullptr);
 
+    //Read out again
+    ReadProcessMemory(hProcess, (BYTE*)ammoAddr, &ammoValue, sizeof(ammoValue), nullptr);
+    std::cout << "New ammo = " << std::dec << ammoValue << std::endl;
+
+
+    getchar();
     return 0;
 }
 
