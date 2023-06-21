@@ -2,6 +2,12 @@
 #include "proc.h"
 
 
+
+/// <summary>
+/// 해당 프로세스 이름을 가지고 프로세스 반환(DWOD)
+/// </summary>
+/// <param name="procName">프로세스 이름</param>
+/// <returns></returns>
 // https://learn.microsoft.com/ko-kr/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot
 DWORD GetProcId(const wchar_t* procName)
 {
@@ -16,6 +22,7 @@ DWORD GetProcId(const wchar_t* procName)
 		{
 			do
 			{
+				// 대소문자 구분없이 비교 
 				if (!_wcsicmp(procEntry.szExeFile, procName))
 				{
 					procId = procEntry.th32ProcessID;
@@ -30,6 +37,12 @@ DWORD GetProcId(const wchar_t* procName)
 	return procId;
 }
 
+/// <summary>
+/// 모듈 주소 반환
+/// </summary>
+/// <param name="procId">프로세스 이름</param>
+/// <param name="modName">ac_client로 포인터로 지정할 base 주소</param>
+/// <returns></returns>
 uintptr_t GetModuleBaseAddress(DWORD procId, const wchar_t* modName)
 {
 	uintptr_t moduleBaseAddress = 0;
@@ -56,7 +69,13 @@ uintptr_t GetModuleBaseAddress(DWORD procId, const wchar_t* modName)
 	return moduleBaseAddress;
 }
 
-
+/// <summary>
+/// 해당 오프셋과 주소를 더하여 반환 
+/// </summary>
+/// <param name="hProc">해당 프로세스</param>
+/// <param name="ptr">로컬 플레이어 주소</param>
+/// <param name="offsets"> 추가할 오프셋</param>
+/// <returns></returns>
 // https://learn.microsoft.com/ko-kr/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory
 uintptr_t FindMAAddy(HANDLE hProc, uintptr_t ptr, std::vector<unsigned int> offsets)
 {
