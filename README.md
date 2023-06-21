@@ -24,3 +24,5 @@ AssaultCube 싱글 버전 메모리 조작 및 로직 변경 프로그램
 2. trainer를 실행해 주세요(작동이 않되는 경우 관리자 권한으로 해주세요) 
 
 ## GIF 
+
+![gif](https://github.com/karistin/AssaultCube-Trainer/blob/master/trainer.gif)
