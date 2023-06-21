@@ -63,10 +63,10 @@ int main()
 
 	std::string health_str = "[Z] HEALTH HACK \n",
 		ammo_str = "[C] INFINITE AMMO \n",
-		recoil_str = "[X] NO RECOIL \n",
-		fly_str = "[NUMPAD 1] FLY HACK \n--------------------------\n";
+		recoil_str = "[X] NO RECOIL \n--------------------------\n";
+		
 
-	std::cout << health_str << ammo_str << recoil_str << fly_str;
+	std::cout << health_str << ammo_str << recoil_str;
 
 	while (GetExitCodeProcess(hProcess, &dwExit) && dwExit == STILL_ACTIVE)
 	{
